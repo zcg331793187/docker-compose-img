@@ -69,22 +69,6 @@ services:
                             - "4000:4000"
                     depends_on:
                         - mysql
-    backup:
-                build:
-                    context: .
-                    dockerfile: ./node/backup/Dockerfile
-                networks:
-                    - backend
-                environment:
-                            DB_HOST: 'mysql'
-                            DB_PORT: '3306'
-                            DB_USER: 'root'
-                            DB_DATABASE: 'Nodejs'
-                            DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
-                volumes:
-                        - backup-data:/backup
-                depends_on:
-                    - mysql
     mysql:
         build:
               context: .
