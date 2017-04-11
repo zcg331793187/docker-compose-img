@@ -1,0 +1,113 @@
+/**
+ * Created by zhoucaiguang on 2017/3/12.
+ */
+"use strict";
+var Sequelize = require('sequelize');
+var role_1 = require('../configs/role');
+var config = role_1.dbConfigs;
+var sequelize = new Sequelize(config.database, // 数据库名
+config.user, // 用户名
+config.password, // 用户密码
+{
+    'dialect': 'mysql',
+    'host': config.server,
+    'port': 3306,
+    'define': {
+        // 字段以下划线（_）来分割（默认是驼峰命名风格）
+        'underscored': true
+    },
+    logging: false //关闭输出sql日志
+});
+var ImgDb = sequelize.define('img', {
+    'url': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true,
+        'unique': true // 字段是否UNIQUE
+    },
+    'time': {
+        'type': Sequelize.DATE(10),
+        'allowNull': true
+    },
+    'titleId': {
+        'type': Sequelize.STRING(100),
+        'allowNull': true
+    }
+}, {
+    // 自定义表名
+    'freezeTableName': true,
+    'tableName': 'node_img',
+    // 是否需要增加createdAt、updatedAt、deletedAt字段
+    'timestamps': false,
+});
+exports.ImgDb = ImgDb;
+var TitleDb = sequelize.define('title', {
+    'title': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true,
+        'unique': false // 字段是否UNIQUE
+    },
+    'imgThums': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true //是否可以为空
+    },
+    'status': {
+        'type': Sequelize.INTEGER,
+        'allowNull': true
+    }
+}, {
+    // 自定义表名
+    'freezeTableName': true,
+    'tableName': 'node_title',
+    // 是否需要增加createdAt、updatedAt、deletedAt字段
+    'timestamps': false,
+});
+exports.TitleDb = TitleDb;
+var WeiboDb = sequelize.define('title', {
+    'uid': {
+        'type': Sequelize.INTEGER,
+        'allowNull': true,
+        'unique': false // 字段是否UNIQUE
+    },
+    'containerId': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true //是否可以为空
+    },
+    'niceName': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true
+    }
+}, {
+    // 自定义表名
+    'freezeTableName': true,
+    'tableName': 'node_weibo_follow',
+    // 是否需要增加createdAt、updatedAt、deletedAt字段
+    'timestamps': false,
+});
+exports.WeiboDb = WeiboDb;
+var ConfigDb = sequelize.define('config', {
+    'id': {
+        'primaryKey': true,
+        'type': Sequelize.INTEGER,
+        'allowNull': true,
+        'unique': false // 字段是否UNIQUE
+    },
+    'webName': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true //是否可以为空
+    },
+    'isUse': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true
+    },
+    'config': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true
+    }
+}, {
+    // 自定义表名
+    'freezeTableName': true,
+    'tableName': 'node_configs',
+    // 是否需要增加createdAt、updatedAt、deletedAt字段
+    'timestamps': false,
+});
+exports.ConfigDb = ConfigDb;

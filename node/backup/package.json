@@ -1,0 +1,23 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://zcg331793187@github.com/zcg331793187/dataBaseAutoBackUp.git"
+  },
+  "author": "_chau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zcg331793187/dataBaseAutoBackUp/issues"
+  },
+  "homepage": "https://github.com/zcg331793187/dataBaseAutoBackUp",
+  "dependencies": {
+    "node-schedule": "^1.2.1"
+  }
+}

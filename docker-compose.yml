@@ -1,0 +1,110 @@
+version: '2'
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: ./nginx/Dockerfile
+        ports:
+            - "80:80"
+        networks:
+            - frontend
+        depends_on:
+            - php
+    php:
+        build:
+            context: .
+            dockerfile: ./php/Dockerfile
+        networks:
+            - frontend
+            - backend
+        environment:
+            MYSQL_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+        depends_on:
+            - mysql
+    loop:
+            build:
+                context: .
+                dockerfile: ./node/loop/Dockerfile
+            networks:
+                - backend
+            environment:
+                       DB_HOST: 'mysql'
+                       DB_PORT: '3306'
+                       DB_USER: 'root'
+                       DB_DATABASE: 'Nodejs'
+                       DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+            depends_on:
+                - mysql
+    imgserver:
+                build:
+                  context: .
+                  dockerfile: ./node/imgServer/Dockerfile
+                networks:
+                            - frontend
+                            - backend
+                ports:
+                            - "3003:3003"
+                environment:
+                            DB_HOST: 'mysql'
+                            DB_PORT: '3306'
+                            DB_USER: 'root'
+                            DB_DATABASE: 'Nodejs'
+                            DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+                depends_on:
+                            - mysql
+
+    imgadminserver:
+                    build:
+                        context: .
+                        dockerfile: ./node/imgAdminServer/Dockerfile
+                    networks:
+                        - backend
+                    environment:
+                                DB_HOST: 'mysql'
+                                DB_PORT: '3306'
+                                DB_USER: 'root'
+                                DB_DATABASE: 'Nodejs'
+                                DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+                    ports:
+                            - "4000:4000"
+                    depends_on:
+                        - mysql
+    backup:
+                build:
+                    context: .
+                    dockerfile: ./node/backup/Dockerfile
+                networks:
+                    - backend
+                environment:
+                            DB_HOST: 'mysql'
+                            DB_PORT: '3306'
+                            DB_USER: 'root'
+                            DB_DATABASE: 'Nodejs'
+                            DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+                volumes:
+                        - backup-data:/backup
+                depends_on:
+                    - mysql
+    mysql:
+        build:
+              context: .
+              dockerfile: ./mysql/Dockerfile
+        volumes:
+            - mysql-data:/var/lib/mysql
+            - backup-data:/backup
+        ports:
+            - "3306:3306"
+        environment:
+            TZ: 'Asia/Shanghai'
+            DB_USER: 'root'
+            MYSQL_ROOT_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
+        command: ['mysqld', '--character-set-server=utf8']
+        networks:
+            - backend
+volumes:
+    mysql-data:
+    backup-data:
+
+networks:
+    frontend:
+    backend:

@@ -1,0 +1,19 @@
+{
+  "name": "imgAdminServer",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app"
+  },
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-body": "^2.0.0",
+    "koa-logger": "^2.0.1",
+    "koa-router": "^7.0.1",
+    "log4js": "^1.1.1",
+    "mysql": "^2.13.0",
+    "mysql-promise": "^4.1.0",
+    "sequelize": "^3.30.2"
+  }
+}
