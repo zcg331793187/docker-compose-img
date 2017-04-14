@@ -69,15 +69,22 @@ services:
                             - "4000:4000"
                     depends_on:
                         - mysql
+    phpmyadmin:
+          image: phpmyadmin/phpmyadmin
+          ports:
+            - 8181:80
+          environment:
+            PMA_HOST: mysql
+          networks:
+                - backend
+          depends_on:
+               - mysql
     mysql:
         build:
               context: .
               dockerfile: ./mysql/Dockerfile
         volumes:
             - mysql-data:/var/lib/mysql
-            - backup-data:/backup
-        ports:
-            - "3306:3306"
         environment:
             TZ: 'Asia/Shanghai'
             DB_USER: 'root'
@@ -85,9 +92,15 @@ services:
         command: ['mysqld', '--character-set-server=utf8']
         networks:
             - backend
+    jenkins:
+        image: jenkins:latest
+        volumes:
+          - jenkins-data:/var/jenkins_home
+        ports:
+          - "49002:8080"
 volumes:
     mysql-data:
-    backup-data:
+    jenkins-data:
 
 networks:
     frontend:
