@@ -6,10 +6,14 @@ services:
             dockerfile: ./nginx/Dockerfile
         ports:
             - "80:80"
+            - "3003:3003"
+            - "4000:4000"
         networks:
             - frontend
         depends_on:
             - php
+            - imgserver
+            - imgadminserver
     php:
         build:
             context: .
@@ -42,8 +46,6 @@ services:
                 networks:
                             - frontend
                             - backend
-                ports:
-                            - "3003:3003"
                 environment:
                             DB_HOST: 'mysql'
                             DB_PORT: '3306'
@@ -58,6 +60,7 @@ services:
                         context: .
                         dockerfile: ./node/imgAdminServer/Dockerfile
                     networks:
+                        - frontend
                         - backend
                     environment:
                                 DB_HOST: 'mysql'
@@ -65,14 +68,12 @@ services:
                                 DB_USER: 'root'
                                 DB_DATABASE: 'Nodejs'
                                 DB_PASSWORD: "${DOCKER_MYSQL_DB_PASSWORD}"
-                    ports:
-                            - "4000:4000"
                     depends_on:
                         - mysql
     phpmyadmin:
           image: phpmyadmin/phpmyadmin
           ports:
-            - 8181:80
+            - "8181:80"
           environment:
             PMA_HOST: mysql
           networks:
@@ -80,9 +81,10 @@ services:
           depends_on:
                - mysql
     mysql:
-        build:
-              context: .
-              dockerfile: ./mysql/Dockerfile
+        image: mysql:5.7
+#        build:
+#              context: .
+#              dockerfile: ./mysql/Dockerfile
         volumes:
             - mysql-data:/var/lib/mysql
         environment:
